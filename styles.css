@@ -132,11 +132,106 @@ body {
 }
 
 #about {
-    margin-bottom: 32px;
+    margin-bottom: 144px;
 }
 
 #experience {
-    margin-bottom: 32px;
+    margin-bottom: 144px;
+}
+
+.header-info {
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    display: none;
+    background-color: rgba(15, 23, 42, .75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.about-content div {
+    color: rgb(148, 163, 184);
+    line-height: 1.625;
+}
+
+.about-content-1 {
+    margin-bottom: 16px;
+}
+
+.about-content-2 {
+    margin-bottom: 16px;
+}
+
+.about-content-3 {}
+
+.experience-wrapper {
+
+}
+
+.experience-item {
+    display: flex;
+    margin-bottom: 48px;
+    cursor: pointer;
+    position: relative;
+}
+
+.experience-item:hover .experience-hover {
+    display: block;
+}
+
+.experience-hover {
+    display: none;
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    right: -24px;
+    bottom: -24px;
+    z-index: -1;
+    border-radius: 8px;
+    background-color: rgba(148, 163, 184, .1);
+}
+
+.experience-time {
+    margin-right: 32px;
+    flex: 2;
+    font-weight: 600;
+    font-size: 12px;
+    color: rgb(100 116 139);
+}
+
+.experience-info {
+    flex: 6;
+}
+
+.experience-position {
+    line-height: 1.25;
+    font-weight: 500;
+
+}
+
+.experience-contribute {
+    margin-top: 8px;
+    line-height: 1.5;
+    font-size: 14;
+    color: rgb(148, 163, 184);
+}
+
+.experience-tech-stacks {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.experience-stack {
+    margin-right: 6px;
+    margin-top: 8px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    color: rgb(94 234 212);
+    font-weight: 500;
+    line-height: 1.25;
+    background-color: rgba(45, 212, 191, .1);
 }
 
 @media screen and (max-width: 1023px) {
@@ -153,6 +248,35 @@ body {
         padding-top: 80px;
         padding-bottom: 0;
         position: relative;
+    }
+
+    #about {
+        margin-bottom: 64px;
+    }
+
+    #experience {
+        margin-bottom: 64px;
+    }
+
+    .header-info {
+        display: block;
+        position: sticky;
+        z-index: 20;
+        top: 0;
+        margin: 0 -24px;
+    }
+
+    .experience-item {
+        flex-direction: column;
+    }
+
+    .experience-time {
+        margin-top: 4px;
+        margin-bottom: 8px;
+    }
+
+    .experience-item:hover .experience-hover {
+        display: none;
     }
 }
 
