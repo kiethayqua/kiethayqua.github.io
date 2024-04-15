@@ -88,10 +88,6 @@ body {
     transition: 0.2s;
 }
 
-.menu-title-wrapper:hover .menu-title {
-    color: white;
-}
-
 .line {
     height: 1px;
     width: 32px;
@@ -100,10 +96,24 @@ body {
     transition: 0.2s;
 }
 
+.line-active {
+    background-color: white;
+    width: 64px;
+    transition: 0.2s;
+}
+
+.menu-title-wrapper:hover .menu-title {
+    color: white;
+}
+
 .menu-title {
     font-size: 12px;
     font-weight: bold;
     color: rgb(148, 163, 184);
+}
+
+.title-active {
+    color: white;
 }
 
 .social-network {
@@ -137,6 +147,10 @@ body {
 
 #experience {
     margin-bottom: 144px;
+}
+
+#projects {
+    margin-bottom: 432px;
 }
 
 .header-info {
@@ -178,6 +192,10 @@ body {
 
 .experience-item:hover .experience-hover {
     display: block;
+}
+
+.experience-item:hover .experience-position {
+    color: rgb(94 234 212);
 }
 
 .experience-hover {
@@ -234,6 +252,24 @@ body {
     background-color: rgba(45, 212, 191, .1);
 }
 
+.view-full-resume {
+    line-height: 1.25;
+    font-weight: 600;
+}
+
+.view-full-resume:hover {
+    color: rgb(94 234 212);
+}
+
+.project-image-wrapper {
+    flex: 2;
+    margin-right: 24px;
+}
+.project-image {
+    width: 100%;
+    border-radius: 4px;
+}
+
 @media screen and (max-width: 1023px) {
     .container {
         flex-direction: column;
@@ -258,6 +294,10 @@ body {
         margin-bottom: 64px;
     }
 
+    #projects {
+        margin-bottom: 0;
+    }
+
     .header-info {
         display: block;
         position: sticky;
@@ -277,6 +317,19 @@ body {
 
     .experience-item:hover .experience-hover {
         display: none;
+    }
+
+    .experience-item:hover .experience-position {
+        color: white;
+    }
+
+    .project-item {
+        flex-direction: column-reverse;
+    }
+
+    .project-image {
+        width: 50%;
+        margin-top: 8px;
     }
 }
 
