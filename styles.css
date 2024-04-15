@@ -198,6 +198,13 @@ body {
     color: rgb(94 234 212);
 }
 
+.experience-item:hover .arrow {
+    fill: rgb(94 234 212);
+    right: -2px;
+    bottom: 0;
+    transition: 0.2s;
+}
+
 .experience-hover {
     display: none;
     position: absolute;
@@ -225,7 +232,6 @@ body {
 .experience-position {
     line-height: 1.25;
     font-weight: 500;
-
 }
 
 .experience-contribute {
@@ -261,6 +267,13 @@ body {
     color: rgb(94 234 212);
 }
 
+.view-full-resume:hover .arrow {
+    fill: rgb(94 234 212);
+    right: -2px;
+    bottom: 0;
+    transition: 0.2s;
+}
+
 .project-image-wrapper {
     flex: 2;
     margin-right: 24px;
@@ -268,6 +281,14 @@ body {
 .project-image {
     width: 100%;
     border-radius: 4px;
+}
+
+.arrow {
+    width: 16px;
+    height: 16px;
+    transition: 0.2s;
+    position: relative;
+    bottom: -4px;
 }
 
 @media screen and (max-width: 1023px) {
