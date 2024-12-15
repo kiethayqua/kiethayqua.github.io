@@ -81,7 +81,7 @@
         newElement.frameBorder = "0";
         newElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
         newElement.allowFullscreen = true;
-        document.getElementById(randomPlayerId).innerHTML = newElement;
+        document.getElementById(randomPlayerId).appendChild(newElement)
 
         // var player;
         // function onYouTubeIframeAPIReady() {
