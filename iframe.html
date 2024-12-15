@@ -189,8 +189,6 @@
         });
 
         (function () {
-            'use strict';
-
             // Utility functions
             function getAutoplayState() {
                 return localStorage.getItem('autoplayNext') === 'true';
@@ -215,21 +213,10 @@
 
             // Main script
             function replaceElement(oldElement) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const videoId = urlParams.get('v');
-
-                if (!videoId) {
-                    console.error('Video ID not found in URL');
-                    return;
-                }
-
-                console.log(`Video ID: ${videoId}`);
-                console.log('Old element found');
-
                 const newElement = document.createElement('iframe');
                 newElement.width = "100%";
                 newElement.height = "100%";
-                newElement.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                newElement.src = `https://www.youtube.com/embed/${videoId_s}?autoplay=1`;
                 newElement.title = "YouTube video player";
                 newElement.frameBorder = "0";
                 newElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
