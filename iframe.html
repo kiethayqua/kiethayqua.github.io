@@ -31,8 +31,8 @@
     </div>
 
     <script>
-        // const randomPlayerId = 'player' + Date.now();
-        // document.getElementById('player').id = randomPlayerId;
+        const randomPlayerId = 'player' + Date.now();
+        document.getElementById('player').id = randomPlayerId;
 
         const parsedUrl = new URL(window.location.href);
         const UrlQueryData = parsedUrl.searchParams.get('data');
@@ -73,245 +73,240 @@
         const viewport = document.querySelector('meta[name=viewport]');
         viewport.setAttribute('content', 'width=device-width, ' + metaString);
 
-        const newElement = document.createElement('iframe');
-        newElement.width = "100%";
-        newElement.height = "100%";
-        newElement.src = `https://www.youtube.com/embed/${videoId_s}?autoplay=1`;
-        newElement.title = "YouTube video player";
-        newElement.frameBorder = "0";
-        newElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        newElement.allowFullscreen = true;
-        document.getElementById('player').appendChild(newElement)
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        // var player;
-        // function onYouTubeIframeAPIReady() {
-        //     player = new YT.Player(randomPlayerId, {
-        //         width: '1000',
-        //         height: '1000',
-        //         videoId: videoId_s,
-        //         playerVars: {
-        //             end: end,
-        //             rel: rel_s,
-        //             list: list,
-        //             color: color,
-        //             loop: loop_s,
-        //             start: start,
-        //             playsinline: 1,
-        //             hl: playerLang,
-        //             playlist: playlist,
-        //             listType: listType,
-        //             controls: controls_s,
-        //             fs: preventFullScreen_s,
-        //             cc_lang_pref: cc_lang_pref_s,
-        //             iv_load_policy: iv_load_policy,
-        //             modestbranding: modestbranding_s,
-        //             cc_load_policy: showClosedCaptions_s,
-        //         },
-        //         events: {
-        //             onReady: onPlayerReady,
-        //             onError: onPlayerError,
-        //             onStateChange: onPlayerStateChange,
-        //             onPlaybackRateChange: onPlaybackRateChange,
-        //             onPlaybackQualityChange: onPlaybackQualityChange,
-        //         },
-        //     });
-        // }
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player(randomPlayerId, {
+                width: '1000',
+                height: '1000',
+                videoId: videoId_s,
+                playerVars: {
+                    end: end,
+                    rel: rel_s,
+                    list: list,
+                    color: color,
+                    loop: loop_s,
+                    start: start,
+                    playsinline: 1,
+                    hl: playerLang,
+                    playlist: playlist,
+                    listType: listType,
+                    controls: controls_s,
+                    fs: preventFullScreen_s,
+                    cc_lang_pref: cc_lang_pref_s,
+                    iv_load_policy: iv_load_policy,
+                    modestbranding: modestbranding_s,
+                    cc_load_policy: showClosedCaptions_s,
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onError: onPlayerError,
+                    onStateChange: onPlayerStateChange,
+                    onPlaybackRateChange: onPlaybackRateChange,
+                    onPlaybackQualityChange: onPlaybackQualityChange,
+                },
+            });
+        }
 
-        // function onPlayerError(event) {
-        //     sendMessageToRN({ eventType: 'playerError', data: event.data });
-        // }
+        function onPlayerError(event) {
+            sendMessageToRN({ eventType: 'playerError', data: event.data });
+        }
 
-        // function onPlaybackRateChange(event) {
-        //     sendMessageToRN({ eventType: 'playbackRateChange', data: event.data });
-        // }
+        function onPlaybackRateChange(event) {
+            sendMessageToRN({ eventType: 'playbackRateChange', data: event.data });
+        }
 
-        // function onPlaybackQualityChange(event) {
-        //     sendMessageToRN({ eventType: 'playerQualityChange', data: event.data });
-        // }
+        function onPlaybackQualityChange(event) {
+            sendMessageToRN({ eventType: 'playerQualityChange', data: event.data });
+        }
 
-        // function onPlayerReady(event) {
-        //     sendMessageToRN({ eventType: 'playerReady' });
-        // }
+        function onPlayerReady(event) {
+            sendMessageToRN({ eventType: 'playerReady' });
 
-        // function onPlayerStateChange(event) {
-        //     sendMessageToRN({ eventType: 'playerStateChange', data: event.data });
-        // }
+            (function () {
+                // Utility functions
+                function getAutoplayState() {
+                    return localStorage.getItem('autoplayNext') === 'true';
+                }
 
-        // var isFullScreen = false;
-        // function onFullScreenChange() {
-        //     isFullScreen =
-        //         document.fullscreenElement ||
-        //         document.msFullscreenElement ||
-        //         document.mozFullScreenElement ||
-        //         document.webkitFullscreenElement;
+                function setAutoplayState(state) {
+                    localStorage.setItem('autoplayNext', state.toString());
+                }
 
-        //     sendMessageToRN({
-        //         eventType: 'fullScreenChange',
-        //         data: Boolean(isFullScreen),
-        //     });
-        // }
+                function toggleAutoplayState(button) {
+                    const autoplayNext = !getAutoplayState();
+                    setAutoplayState(autoplayNext);
+                    button.title = autoplayNext ? 'Autoplay is on' : 'Autoplay is off';
+                    button.setAttribute('aria-label', autoplayNext ? 'Autoplay is on' : 'Autoplay is off');
+                    button.querySelector('.ytp-autonav-toggle-button').setAttribute('aria-checked', autoplayNext.toString());
+                    return autoplayNext;
+                }
 
-        // document.addEventListener('fullscreenchange', onFullScreenChange);
-        // document.addEventListener('msfullscreenchange', onFullScreenChange);
-        // document.addEventListener('mozfullscreenchange', onFullScreenChange);
-        // document.addEventListener('webkitfullscreenchange', onFullScreenChange);
+                function isVideoEnded(iframeDoc) {
+                    return iframeDoc.querySelector('.html5-endscreen.ytp-show-tiles') !== null;
+                }
 
-        // window.addEventListener('message', function (event) {
-        //     const { data } = event;
+                // Main script
+                function replaceElement(oldElement) {
+                    const newElement = document.createElement('iframe');
+                    newElement.width = "100%";
+                    newElement.height = "100%";
+                    newElement.src = `https://www.youtube.com/embed/${videoId_s}?autoplay=1`;
+                    newElement.title = "YouTube video player";
+                    newElement.frameBorder = "0";
+                    newElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                    newElement.allowFullscreen = true;
 
-        //     try {
-        //         const parsedData = JSON.parse(data);
-        //         const { eventName, meta } = parsedData;
+                    oldElement.parentNode.replaceChild(newElement, oldElement);
+                    console.log('Element replaced successfully');
 
-        //         switch (eventName) {
-        //             case 'playVideo':
-        //                 player.playVideo();
-        //                 break;
+                    newElement.onload = () => {
+                        const iframeDoc = newElement.contentDocument;
 
-        //             case 'pauseVideo':
-        //                 player.pauseVideo();
-        //                 break;
+                        const refButton = iframeDoc.querySelector('.ytp-subtitles-button');
+                        const youtubeButton = iframeDoc.querySelector('.ytp-youtube-button');
 
-        //             case 'muteVideo':
-        //                 player.mute();
-        //                 break;
+                        if (youtubeButton) {
+                            youtubeButton.parentNode.removeChild(youtubeButton);
+                        } else {
+                            console.error('YouTube button not found');
+                        }
 
-        //             case 'unMuteVideo':
-        //                 player.unMute();
-        //                 break;
+                        if (refButton) {
+                            const autoPlayButton = document.createElement('button');
+                            autoPlayButton.className = 'ytp-button';
+                            autoPlayButton.setAttribute('data-priority', '2');
+                            autoPlayButton.setAttribute('data-tooltip-target-id', 'ytp-autonav-toggle-button');
+                            autoPlayButton.title = getAutoplayState() ? 'Autoplay is on' : 'Autoplay is off';
+                            autoPlayButton.setAttribute('aria-label', getAutoplayState() ? 'Autoplay is on' : 'Autoplay is off');
+                            autoPlayButton.innerHTML = `
+                    <div class="ytp-autonav-toggle-button-container">
+                        <div class="ytp-autonav-toggle-button" aria-checked="${getAutoplayState().toString()}"></div>
+                    </div>
+                `;
 
-        //             case 'setVolume':
-        //                 player.setVolume(meta.volume);
-        //                 break;
+                            refButton.parentNode.insertBefore(autoPlayButton, refButton.nextSibling);
 
-        //             case 'setPlaybackRate':
-        //                 player.setPlaybackRate(meta.playbackRate);
-        //                 break;
-        //         }
-        //     } catch (error) {
-        //         console.error('Error parsing data', event, error);
-        //     }
-        // });
+                            autoPlayButton.addEventListener('click', () => {
+                                const isAutoplayOn = toggleAutoplayState(autoPlayButton);
+                                if (isAutoplayOn && isVideoEnded(iframeDoc)) {
+                                    playNextVideo();
+                                }
+                            });
+                        } else {
+                            console.error('Reference button not found');
+                        }
 
-        // (function () {
-        //     // Utility functions
-        //     function getAutoplayState() {
-        //         return localStorage.getItem('autoplayNext') === 'true';
-        //     }
+                        const endScreenObserver = new MutationObserver((mutations) => {
+                            for (const mutation of mutations) {
+                                if (mutation.target.classList.contains('ytp-show-tiles') && getAutoplayState()) {
+                                    playNextVideo();
+                                    break;
+                                }
+                            }
+                        });
 
-        //     function setAutoplayState(state) {
-        //         localStorage.setItem('autoplayNext', state.toString());
-        //     }
+                        endScreenObserver.observe(iframeDoc, { attributes: true, subtree: true, attributeFilter: ['class'] });
+                    };
+                }
 
-        //     function toggleAutoplayState(button) {
-        //         const autoplayNext = !getAutoplayState();
-        //         setAutoplayState(autoplayNext);
-        //         button.title = autoplayNext ? 'Autoplay is on' : 'Autoplay is off';
-        //         button.setAttribute('aria-label', autoplayNext ? 'Autoplay is on' : 'Autoplay is off');
-        //         button.querySelector('.ytp-autonav-toggle-button').setAttribute('aria-checked', autoplayNext.toString());
-        //         return autoplayNext;
-        //     }
+                function playNextVideo() {
+                    const rendererElements = document.querySelectorAll('ytd-compact-video-renderer');
+                    for (let rendererElement of rendererElements) {
+                        if (!rendererElement.querySelector('ytd-compact-radio-renderer')) {
+                            const nextVideoLink = rendererElement.querySelector('a#thumbnail');
+                            if (nextVideoLink && nextVideoLink.href) {
+                                const autoplayURL = new URL(nextVideoLink.href);
+                                autoplayURL.searchParams.set('autoplay', '1');
+                                console.log(`Found next video link: ${autoplayURL.href}`);
+                                window.location.href = autoplayURL.href;
+                                return;
+                            }
+                        }
+                    }
+                    console.error('Next video link not found');
+                }
 
-        //     function isVideoEnded(iframeDoc) {
-        //         return iframeDoc.querySelector('.html5-endscreen.ytp-show-tiles') !== null;
-        //     }
+                const observer = new MutationObserver((mutationsList) => {
+                    for (let mutation of mutationsList) {
+                        if (mutation.addedNodes.length) {
+                            for (let node of mutation.addedNodes) {
+                                if (node.nodeName.toLowerCase() === 'ytd-enforcement-message-view-model') {
+                                    replaceElement(node);
+                                }
+                            }
+                        }
+                    }
+                });
 
-        //     // Main script
-        //     function replaceElement(oldElement) {
-        //         const newElement = document.createElement('iframe');
-        //         newElement.width = "100%";
-        //         newElement.height = "100%";
-        //         newElement.src = `https://www.youtube.com/embed/${videoId_s}?autoplay=1`;
-        //         newElement.title = "YouTube video player";
-        //         newElement.frameBorder = "0";
-        //         newElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        //         newElement.allowFullscreen = true;
+                observer.observe(document, { childList: true, subtree: true });
 
-        //         oldElement.parentNode.replaceChild(newElement, oldElement);
-        //         console.log('Element replaced successfully');
+            })();
+        }
 
-        //         newElement.onload = () => {
-        //             const iframeDoc = newElement.contentDocument;
+        function onPlayerStateChange(event) {
+            sendMessageToRN({ eventType: 'playerStateChange', data: event.data });
+        }
 
-        //             const refButton = iframeDoc.querySelector('.ytp-subtitles-button');
-        //             const youtubeButton = iframeDoc.querySelector('.ytp-youtube-button');
+        var isFullScreen = false;
+        function onFullScreenChange() {
+            isFullScreen =
+                document.fullscreenElement ||
+                document.msFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.webkitFullscreenElement;
 
-        //             if (youtubeButton) {
-        //                 youtubeButton.parentNode.removeChild(youtubeButton);
-        //             } else {
-        //                 console.error('YouTube button not found');
-        //             }
+            sendMessageToRN({
+                eventType: 'fullScreenChange',
+                data: Boolean(isFullScreen),
+            });
+        }
 
-        //             if (refButton) {
-        //                 const autoPlayButton = document.createElement('button');
-        //                 autoPlayButton.className = 'ytp-button';
-        //                 autoPlayButton.setAttribute('data-priority', '2');
-        //                 autoPlayButton.setAttribute('data-tooltip-target-id', 'ytp-autonav-toggle-button');
-        //                 autoPlayButton.title = getAutoplayState() ? 'Autoplay is on' : 'Autoplay is off';
-        //                 autoPlayButton.setAttribute('aria-label', getAutoplayState() ? 'Autoplay is on' : 'Autoplay is off');
-        //                 autoPlayButton.innerHTML = `
-        //             <div class="ytp-autonav-toggle-button-container">
-        //                 <div class="ytp-autonav-toggle-button" aria-checked="${getAutoplayState().toString()}"></div>
-        //             </div>
-        //         `;
+        document.addEventListener('fullscreenchange', onFullScreenChange);
+        document.addEventListener('msfullscreenchange', onFullScreenChange);
+        document.addEventListener('mozfullscreenchange', onFullScreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullScreenChange);
 
-        //                 refButton.parentNode.insertBefore(autoPlayButton, refButton.nextSibling);
+        window.addEventListener('message', function (event) {
+            const { data } = event;
 
-        //                 autoPlayButton.addEventListener('click', () => {
-        //                     const isAutoplayOn = toggleAutoplayState(autoPlayButton);
-        //                     if (isAutoplayOn && isVideoEnded(iframeDoc)) {
-        //                         playNextVideo();
-        //                     }
-        //                 });
-        //             } else {
-        //                 console.error('Reference button not found');
-        //             }
+            try {
+                const parsedData = JSON.parse(data);
+                const { eventName, meta } = parsedData;
 
-        //             const endScreenObserver = new MutationObserver((mutations) => {
-        //                 for (const mutation of mutations) {
-        //                     if (mutation.target.classList.contains('ytp-show-tiles') && getAutoplayState()) {
-        //                         playNextVideo();
-        //                         break;
-        //                     }
-        //                 }
-        //             });
+                switch (eventName) {
+                    case 'playVideo':
+                        player.playVideo();
+                        break;
 
-        //             endScreenObserver.observe(iframeDoc, { attributes: true, subtree: true, attributeFilter: ['class'] });
-        //         };
-        //     }
+                    case 'pauseVideo':
+                        player.pauseVideo();
+                        break;
 
-        //     function playNextVideo() {
-        //         const rendererElements = document.querySelectorAll('ytd-compact-video-renderer');
-        //         for (let rendererElement of rendererElements) {
-        //             if (!rendererElement.querySelector('ytd-compact-radio-renderer')) {
-        //                 const nextVideoLink = rendererElement.querySelector('a#thumbnail');
-        //                 if (nextVideoLink && nextVideoLink.href) {
-        //                     const autoplayURL = new URL(nextVideoLink.href);
-        //                     autoplayURL.searchParams.set('autoplay', '1');
-        //                     console.log(`Found next video link: ${autoplayURL.href}`);
-        //                     window.location.href = autoplayURL.href;
-        //                     return;
-        //                 }
-        //             }
-        //         }
-        //         console.error('Next video link not found');
-        //     }
+                    case 'muteVideo':
+                        player.mute();
+                        break;
 
-        //     const observer = new MutationObserver((mutationsList) => {
-        //         for (let mutation of mutationsList) {
-        //             if (mutation.addedNodes.length) {
-        //                 for (let node of mutation.addedNodes) {
-        //                     if (node.nodeName.toLowerCase() === 'ytd-enforcement-message-view-model') {
-        //                         replaceElement(node);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     });
+                    case 'unMuteVideo':
+                        player.unMute();
+                        break;
 
-        //     observer.observe(document, { childList: true, subtree: true });
+                    case 'setVolume':
+                        player.setVolume(meta.volume);
+                        break;
 
-        // })();
+                    case 'setPlaybackRate':
+                        player.setPlaybackRate(meta.playbackRate);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error parsing data', event, error);
+            }
+        });
     </script>
 </body>
 
